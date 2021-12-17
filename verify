@@ -1,0 +1,14 @@
+#!/usr/bin/env python3
+
+with open("correct.pi", "r") as f:
+    correct = f.read()
+
+with open("pi", "r") as f:
+    got = f.read()
+
+for i, (a, b) in enumerate(zip(correct, got)):
+    print(a, end="")
+    if a != b:
+        print()
+        print(f"{a} <-> {b} at {i}")
+        break

@@ -1,0 +1,78 @@
+diff --git a/src/lib.rs b/src/lib.rs
+index 8eb3dd6..a25abdf 100644
+--- a/src/lib.rs
++++ b/src/lib.rs
+@@ -69,6 +69,8 @@ pub use num_traits::{FromPrimitive, Num, One, Signed, ToPrimitive, Zero};
+ 
+ const LOG2_10: f64 = 3.321928094887362_f64;
+ 
++const PRECISION:u64 = 1000;
++
+ #[macro_use]
+ mod macros;
+ 
+@@ -415,7 +417,7 @@ impl BigDecimal {
+         // }
+ 
+         // TODO: Use context variable to set precision
+-        let max_precision = 100;
++        let max_precision = PRECISION;
+ 
+         let next_iteration = move |r: BigDecimal| {
+             // division needs to be precise to (at least) one extra digit
+@@ -482,7 +484,7 @@ impl BigDecimal {
+         };
+ 
+         // TODO: Use context variable to set precision
+-        let max_precision = 100;
++        let max_precision = PRECISION;
+ 
+         let three = BigDecimal::from(3);
+ 
+@@ -549,7 +551,7 @@ impl BigDecimal {
+             }
+         };
+ 
+-        let max_precision = 100;
++        let max_precision = PRECISION;
+         let next_iteration = move |r: BigDecimal| {
+             let two = BigDecimal::from(2);
+             let tmp = two - self * &r;
+@@ -1262,7 +1264,9 @@ impl<'a> MulAssign<&'a BigDecimal> for BigDecimal {
+ impl_div_for_primitives!();
+ 
+ #[inline(always)]
+-fn impl_division(mut num: BigInt, den: &BigInt, mut scale: i64, max_precision: u64) -> BigDecimal {
++fn impl_division(mut num: BigInt, den: &BigInt, mut scale: i64, _max_precision: u64) -> BigDecimal {
++    let max_precision = PRECISION;
++
+     // quick zero check
+     if num.is_zero() {
+         return BigDecimal::new(num, 0);
+@@ -1337,7 +1341,7 @@ impl Div<BigDecimal> for BigDecimal {
+             };
+         }
+ 
+-        let max_precision = 100;
++        let max_precision = PRECISION;
+ 
+         return impl_division(self.int_val, &other.int_val, scale, max_precision);
+     }
+@@ -1363,7 +1367,7 @@ impl<'a> Div<&'a BigDecimal> for BigDecimal {
+             };
+         }
+ 
+-        let max_precision = 100;
++        let max_precision = PRECISION;
+ 
+         return impl_division(self.int_val, &other.int_val, scale, max_precision);
+     }
+@@ -1396,7 +1400,7 @@ impl<'a, 'b> Div<&'b BigDecimal> for &'a BigDecimal {
+             };
+         }
+ 
+-        let max_precision = 100;
++        let max_precision = PRECISION;
+ 
+         return impl_division(num_int.clone(), &den_int, scale, max_precision);
+     }
